@@ -1,0 +1,12 @@
+{
+    "type": "record",
+    "name": "ClientRequest",
+    "namespace": "tech.garymyers.edge.manager.message.v1",
+    "fields": [
+        {
+            "name": "command",
+            "type": "string",
+            "default": "ping"
+        }
+    ]
+}

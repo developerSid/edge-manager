@@ -1,0 +1,6 @@
+applicationType: cli
+defaultPackage: tech.garymyers.edge
+testFramework: spock
+sourceLanguage: kotlin
+buildTool: gradle
+features: [annotation-api, app-name, data, data-jdbc, data-r2dbc, graalvm, gradle, h2, jdbc-hikari, kotlin, logback, picocli, picocli-kotlin-application, picocli-spock, properties, r2dbc, readme, shade, spock]

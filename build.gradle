@@ -1,0 +1,83 @@
+plugins {
+    id("idea")
+    id("org.jetbrains.kotlin.jvm") version "${kotlinVersion}"
+    id("org.jetbrains.kotlin.kapt") version "${kotlinVersion}"
+    id("org.jetbrains.kotlin.plugin.allopen") version "${kotlinVersion}"
+    id("groovy")
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("io.micronaut.application") version "1.4.2"
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.0.0"
+}
+
+version = "0.1"
+group = "tech.garymyers.edge"
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("tech.garymyers.edge.*")
+    }
+}
+
+dependencies {
+    kapt("info.picocli:picocli-codegen")
+    kapt("io.micronaut.data:micronaut-data-processor")
+
+    implementation("info.picocli:picocli")
+    implementation("io.micronaut.picocli:micronaut-picocli")
+    implementation("io.micronaut:micronaut-validation")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("javax.annotation:javax.annotation-api")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.r2dbc:micronaut-r2dbc-core")
+    implementation("io.micronaut.r2dbc:micronaut-data-r2dbc")
+    implementation("org.zeromq:jeromq:0.5.2")
+    implementation("org.apache.avro:avro:1.10.1")
+    implementation("org.apache.avro:avro-tools:1.10.1")
+    implementation("org.jgroups:jgroups:5.1.5.Final")
+
+    compileOnly("org.graalvm.nativeimage:svm")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+    runtimeOnly("com.h2database:h2")
+    runtimeOnly("io.r2dbc:r2dbc-h2")
+
+    testImplementation("io.micronaut:micronaut-http-client")
+}
+
+
+application {
+    mainClass.set("tech.garymyers.edge.ManagerCommand")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("11")
+}
+
+tasks {
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+            useIR = true
+        }
+    }
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+            useIR = true
+        }
+    }
+}
+
+avro {
+    fieldVisibility = "private"
+}
+
