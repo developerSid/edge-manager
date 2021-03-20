@@ -7,7 +7,6 @@ import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
-import tech.garymyers.edge.manager.message.v1.ClientRequest
 
 @Command(name = "manager", description = ["..."],
         mixinStandardHelpOptions = true)
@@ -26,9 +25,7 @@ class ManagerCommand : Runnable {
     companion object {
         @JvmStatic fun main(args: Array<String>) {
             PicocliRunner.run(ManagerCommand::class.java, *args)
-            val builder = ClientRequest.newBuilder()
 
-            val request = builder.setCommand("ls -l").build()
         }
     }
 }

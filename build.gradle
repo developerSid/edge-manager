@@ -1,12 +1,10 @@
 plugins {
-    id("idea")
     id("org.jetbrains.kotlin.jvm") version "${kotlinVersion}"
     id("org.jetbrains.kotlin.kapt") version "${kotlinVersion}"
     id("org.jetbrains.kotlin.plugin.allopen") version "${kotlinVersion}"
     id("groovy")
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("io.micronaut.application") version "1.4.2"
-    id "com.github.davidmc24.gradle.plugin.avro" version "1.0.0"
 }
 
 version = "0.1"
@@ -22,6 +20,10 @@ micronaut {
         incremental(true)
         annotations("tech.garymyers.edge.*")
     }
+}
+
+sourceSets {
+    main.kotlin.srcDirs += 'src/main/generated'
 }
 
 dependencies {
@@ -41,8 +43,8 @@ dependencies {
     implementation("io.micronaut.r2dbc:micronaut-r2dbc-core")
     implementation("io.micronaut.r2dbc:micronaut-data-r2dbc")
     implementation("org.zeromq:jeromq:0.5.2")
-    implementation("org.apache.avro:avro:1.10.1")
-    implementation("org.apache.avro:avro-tools:1.10.1")
+    implementation("org.apache.avro:avro:1.10.2")
+    implementation("org.apache.avro:avro-tools:1.10.2")
     implementation("org.jgroups:jgroups:5.1.5.Final")
 
     compileOnly("org.graalvm.nativeimage:svm")
@@ -52,8 +54,8 @@ dependencies {
     runtimeOnly("io.r2dbc:r2dbc-h2")
 
     testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("org.apache.avro:avro-tools:1.10.2")
 }
-
 
 application {
     mainClass.set("tech.garymyers.edge.ManagerCommand")
@@ -77,7 +79,10 @@ tasks {
     }
 }
 
-avro {
-    fieldVisibility = "private"
+task generateAvroClasses(type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.test.compileClasspath
+    main = "org.apache.avro.tool.Main"
+    args = ["compile", "schema", "src/main/resources/schema/avro/v1/", "src/main/generated"]
 }
-
